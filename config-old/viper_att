@@ -1,0 +1,40 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2 config File      #
+##################################
+
+# load parent
+loadCfg ".default_jb22_cdr"
+
+# customize
+CFG_DIR_PROJECT="viper_att"
+CFG_NAME_PROJECT="viper_att"
+CFG_DIR_OUT="out/target/product/viper_att"
+CFG_ENV_CONFIG="choosecombo 1 viper_att 3 2 2"
+CFG_PARTITION=( "modem"    \
+                "sbl1"     \
+                "sbl2"     \
+                "sbl3"     \
+                "tz"       \
+                "rpm"      \
+                "aboot"    \
+                "boot"     \
+                "cache"    \
+                "system"   \
+                "persist"  \
+                "userdata" \
+                "recovery" )
+CFG_IMAGE=( "NON-HLOS.bin"      \
+            "sbl1.mbn"          \
+            "sbl2.mbn"          \
+            "sbl3.mbn"          \
+            "tz.mbn"            \
+            "rpm.mbn"           \
+            "emmc_appsboot.mbn" \
+            "boot.img"          \
+            "cache.img"         \
+            "system.img"        \
+            "persist.img"       \
+            "userdata.img"      \
+            "recovery.img" )

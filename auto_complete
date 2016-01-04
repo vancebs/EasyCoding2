@@ -1,0 +1,45 @@
+#! /bin/bash
+
+# get script path
+export SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
+export SCRIPT_DIR=$(dirname $SCRIPT_PATH)
+EC_PATH="$SCRIPT_DIR/ec2"
+
+function import() {
+    # $1: path & parameters
+    source "$SCRIPT_DIR/$1"
+}
+
+# imports
+import "utility"
+
+function ec_auto_complete() {
+	local cmd="${1##*/}"
+	local word=${COMP_WORDS[COMP_CWORD]}
+	local line=${COMP_LINE}
+	local list
+	
+	case "$COMP_CWORD" in
+	1)
+		loadCfgList "$SCRIPT_DIR" "LIST"
+		;;
+	2)
+		loadCmdList "$SCRIPT_DIR" "LIST"
+		;;
+	esac
+
+	list="${LIST[@]}"
+	COMPREPLY=( $(compgen -W "$list" -- "$word") )
+
+	unset LIST
+	return 0
+}
+
+#complete -F ec_auto_complete $EC_PATH
+complete -F ec_auto_complete "ec"
+
+unset SCRIPT_PATH
+#unset SCRIPT_DIR // keep this value
+unset EC_PATH
+
+

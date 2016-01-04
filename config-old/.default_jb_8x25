@@ -1,0 +1,39 @@
+#! /bin/bash
+
+##########################################
+# Easy Coding 2 default config File      #
+##########################################
+
+# import global settings
+import "globalCfg"
+
+CFG_BRANCH="jb_8x25"
+CFG_DIR_BASE="$GLOBAL_DIR_BASE"
+#CFG_DIR_PROJECT="scribe5"
+#CFG_DIR_OUT="out/target/product/scribe5"
+CFG_ENV_SETUP="./build/envsetup.sh"
+#CFG_ENV_CONFIG="choosecombo 1 2 3 2 2"
+CFG_MAKE_ANDROID="make"
+CFG_MAKE_AMSS="./UDMCKOLYM.cmd"
+CFG_PARTITION=( "boot"     \
+                "cache"    \
+                "system"   \
+                "persist"  \
+                "userdata" \
+                "recovery" \
+                "custpack")
+CFG_IMAGE=( "boot.img"          \
+            "cache.img"         \
+            "system.img"        \
+            "persist.img"       \
+            "userdata.img"      \
+            "recovery.img"      \
+            "custpack.img" )
+CFG_URL_REPO_PULL="$GLOBAL_URL_REPO_PULL""quic"
+CFG_URL_REPO_PUSH="$GLOBAL_URL_REPO_PUSH""quic"
+CFG_DIR_MANIFEST="manifest"
+CFG_IS_DEFAULT_BRANCH="TRUE"
+
+# Dir keep the patchs on server "smb://172.16.11.20/software".
+# If this value not set, patch will be ignored
+#CFG_DIR_PATCH="04_Integration/Integration-1/01_Project/Scribe5"

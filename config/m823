@@ -1,0 +1,16 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2 config File      #
+##################################
+
+# load parent
+loadCfg ".default_l8916"
+
+# customize
+CFG_DIR_PROJECT="m823"
+CFG_NAME_PROJECT="m823_cmcc"
+CFG_DIR_OUT="out/target/product/$CFG_NAME_PROJECT"
+CFG_ENV_CONFIG="choosecombo 1 $CFG_NAME_PROJECT userdebug 2 2"
+
+CFG_BRANCH="l8936_cmcc"

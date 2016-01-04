@@ -1,0 +1,16 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2 config File      #
+##################################
+
+# load parent
+loadCfg ".default_mtk"
+
+# customize
+CFG_DIR_PROJECT="mtk"
+CFG_NAME_PROJECT="mtk"
+CFG_DIR_OUT="out/target/product/$CFG_NAME_PROJECT"
+CFG_ENV_CONFIG="choosecombo 1 $CFG_NAME_PROJECT eng 2 2"
+
+CFG_BRANCH="mtk6589-mr1-global-dev4"

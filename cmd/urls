@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# initialize
+_BRANCH="$CFG_BRANCH"
+_PATH_PROJECT="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+_SELECT_PATCH="FALSE"
+
+print i "==============="
+print i "repo init -u $CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git -m $_BRANCH.xml"
+print i "repo sync -j8"
+print i "repo start "$_BRANCH" --all"
+print i "==============="
+print i "git push $CFG_URL_REPO_PUSH/[path].git HEAD:refs/for/$_BRANCH"
+print i "==============="
+print i "git clone $CFG_URL_REPO_PUSH/[path].git -b $_BRANCH"
+print i "==============="
+
+# cleanup
+unset _BRANCH
+unset _PATH_PROJECT
+unset _SELECT_PATCH
+
+# finished
+print i "Clone Done!!!"

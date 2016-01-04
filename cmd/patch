@@ -1,0 +1,104 @@
+#! /bin/bash
+
+# $1: path
+
+_SMB_SERVER="smb://172.16.11.20/software"
+_PATCH_PATH="$CFG_DIR_PATCH"
+_TARGET_PATH="$CFG_DIR_BASE/$CFG_DIR_PROJECT" # default path
+_USE_DEFAULT="FALSE"
+
+# check whether need patch
+if [ -z "$_PATCH_PATH" ]; then
+    print i "unnecessary to patch"
+else
+    # pasar parameter
+    while [ "$#" -gt "1" ]; do
+        case $1 in
+        -p|-path)
+            # path to patch
+            shift
+            if [ -n "$1" ]; then
+                _TARGET_PATH=$1
+            fi
+            ;;
+        -d|-default)
+            # use laest patch as default
+            _USE_DEFAULT="TRUE"
+            ;;
+        -h|--help)
+            # help
+            print w "ec <project> patch [options]"
+            print w "Options: "
+            print w "    -p | -pach: Set the path where should apply the patch."
+            print w "                If not set, default project path will be used."
+            print w "    -d | -default: Use default (latest) patch."
+            ;;
+        esac
+        
+        shift
+    done
+
+    # convert target path to full path
+    cd "$_TARGET_PATH"
+    _TARGET_PATH="$PWD"
+    
+    # info
+    print i "apply patch to patch: $_TARGET_PATH"
+    print i ""
+
+    # enter patch directory
+    if [ ! -e ~/.gvfs/software\ on\ 172.16.11.20 ]; then
+        gvfs-mount "$_SMB_SERVER"
+    fi
+    cd ~/.gvfs/software\ on\ 172.16.11.20
+    cd $_PATCH_PATH
+
+    # get & list patchs
+    print i "Patch list:"
+    _I="0"
+    for _FILE in ./*; do
+        _MATCH=`expr "$_FILE" : ".*\.tar\.gz"`
+        if [ "$_MATCH" -ne "0" ]; then
+            _PATCH_LIST[$_I]=$_FILE
+            print i "[$_I] $_FILE" # list patch
+            _I=$((_I + 1))
+        fi
+    done
+
+    # set default path id
+    _I=$((_I - 1))
+    
+    # check use default
+    if [ "$_USE_DEFAULT" == "TRUE" ]; then
+        _PATCH_ID="$_I"
+        print i "Use latest patch: $_PATCH_ID"
+    else
+        # read
+        print i "Select a patch [$_I]: "
+        read _PATCH_ID
+        if [ -z "$_PATCH_ID" ]; then
+            _PATCH_ID="$_I"
+        fi
+    fi
+
+    # download path
+    print i "downloading path ..."
+    cp -f "${_PATCH_LIST[$_PATCH_ID]}" "$_TARGET_PATH/patch.tar.gz"
+    print i "doanload finished"
+
+    # apply pathch
+    print i "applying path ..."
+    cd "$_TARGET_PATH"
+    tar -xvf "patch.tar.gz" "./"
+    print i "apply path finished"
+fi
+
+unset _I
+unset _SMB_SERVER
+unset _PATCH_PATH
+unset _MATCH
+unset _FILE
+unset _PATCH_LIST
+unset _PATCH_ID
+unset _TARGET_PATH
+unset _USE_DEFAULT

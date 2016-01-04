@@ -1,0 +1,37 @@
+#! /bin/bash
+
+_APP_NAME="EasyCoding2"
+_CMD_NAME="ec"
+_BASHRC="$HOME/.bashrc"
+_SCRIPT_PATH=$(readlink -f "$0")
+_SCRIPT_DIR=$(dirname $_SCRIPT_PATH)
+_EC_PATH="$_SCRIPT_DIR/ec2"
+_NEED_INSTALL="TRUE"
+_INSTALL_KEY="alias $_CMD_NAME='source $_EC_PATH'"
+
+# check initialized
+if [ "$INIT_INITIALIZED" == "TRUE" ]; then
+    # unnecessary to install
+    echo "Already Initializing before."
+else
+    # install
+    echo "# Initializing EasyCoding2"
+    #echo "$_INSTALL_KEY" >> $_BASHRC
+    $_INSTALL_KEY
+    source $_SCRIPT_DIR/auto_complete
+    INIT_INITIALIZED="TRUE"
+    
+    # success
+    echo "Initializing finished."
+    echo "Now you can use $_APP_NAME with command \"$_CMD_NAME\"."
+fi
+
+# clean up
+unset _BASHRC
+unset _CMD_NAME
+unset _LINE
+unset _SCRIPT_PATH
+unset _SCRIPT_DIR
+unset _EC_PATH
+unset _INSTALL_KEY
+unset _NEED_INSTALL

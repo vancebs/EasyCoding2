@@ -1,0 +1,118 @@
+#!/bin/bash
+############################################################################################################
+# Description:                                                                                             #
+#     Clone project from server                                                                            #
+# Version                                                                                                  #
+#     2.0                                                                                                  #
+# Remark:                                                                                                  #
+#     Newly cloned project will replace old one with path "$CFG_DIR_BASE/$CFG_DIR_PROJECT"                 #
+#     Old project folder will be backup to path "$CFG_DIR_BASE/backup/$CFG_DIR_PROJECT/$_BACKUP_NAME"      #
+#     "$_BACKUP_NAME" should be the date of the project cloned. It is stored in file ".date" under         #
+#     project folder. If the file not exists, use the current date with "_backup" at the end of file name. #
+############################################################################################################
+
+# start
+print i "Clone Start!!!"
+
+# initialize
+_BRANCH="$CFG_BRANCH"
+_PATH_PROJECT="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+_DATEFILE=".date"
+_DIR_PROJECT_BACKUP="$CFG_DIR_BASE/backup/$CFG_DIR_PROJECT"
+_IS_DEFAULT_BRANCH="$CFG_IS_DEFAULT_BRANCH"
+_SELECT_PATCH="FALSE"
+
+# pasar parameter
+while [ "$#" -gt "1" ]; do
+    case $1 in
+    -patch)
+        # require select patch
+        _SELECT_PATCH="TRUE"
+        ;;
+    -h|--help)
+        # help
+        print w "ec <project> clone [options]"
+        print w "Options: "
+        print w "    -patch: Set this potion for select patch manually."
+        print w "            If not set, use the latest one as default."
+        ;;
+    esac
+    
+    shift
+done
+
+# prepar temp path for download
+_DATE="$(date +%Y-%m-%d-%H-%M-%S)"
+_PATH_PROJECT_TEMP="$_DIR_PROJECT_BACKUP/$_DATE"
+mkdir -p "$_PATH_PROJECT_TEMP"
+echo "$_DATE" > "$_PATH_PROJECT_TEMP/$_DATEFILE"
+
+# copy .classpath and .project
+cp -f "$_PATH_PROJECT/.classpath" "$_PATH_PROJECT_TEMP/.classpath"
+cp -f "$_PATH_PROJECT/.project" "$_PATH_PROJECT_TEMP/.project"
+
+# downalod patch
+if [ "$_SELECT_PATCH" == "TRUE" ]; then
+    execute "patch -p $_PATH_PROJECT_TEMP"
+else
+    execute "patch -p $_PATH_PROJECT_TEMP -d"
+fi
+
+# prepar the input text
+_INPUT="$GLOBAL_REPO_NAME\r$GLOBAL_REPO_EMAIL\ry\r"
+
+# prepar repo cmd
+_CMD_REPO="repo init -u $CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git"
+if [ "$_IS_DEFAULT_BRANCH" != "TRUE" ]; then
+    _CMD_REPO="$_CMD_REPO -m $_BRANCH.xml"
+fi
+#_CMD_REPO="$_CMD_REPO --depth=1"
+
+# do clone
+cd "$_PATH_PROJECT_TEMP"
+echo -e "$_INPUT" | $_CMD_REPO
+repo sync -j8
+repo start "$_BRANCH" --all
+
+# do clone
+#cd "$_PATH_PROJECT_TEMP"
+#if [ "$_IS_DEFAULT_BRANCH" == "TRUE" ]; then
+#    echo -e "$_INPUT" | repo init -u "$CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git"
+#    #echo -e "$_INPUT" | repo init -u "$CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git --depth=1"
+#else
+#    echo -e "$_INPUT" | repo init -u "$CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git" -m "$_BRANCH.xml"
+#    #echo -e "$_INPUT" | repo init -u "$CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git" -m "$_BRANCH.xml --depth=1"
+#fi
+#repo sync -j8
+#repo start "$_BRANCH" --all
+
+# backup old project
+_BACKUP_NAME="$(cat $_PATH_PROJECT/$_DATEFILE)"
+if [ -z "$_BACKUP_NAME" ]; then
+    _BACKUP_NAME="$_DATE""_backup"
+fi
+mv -f "$_PATH_PROJECT" "$_DIR_PROJECT_BACKUP/$_BACKUP_NAME"
+
+# move project from temp path to final path
+mv -f "$_PATH_PROJECT_TEMP" "$_PATH_PROJECT"
+
+# apply Ccache
+cd "$_PATH_PROJECT"
+import "cmd/env" # make sure prebuilts patch is downloaded
+$_PATH_PROJECT/prebuilts/misc/linux-x86/ccache/ccache -M 50G
+
+# cleanup
+unset _BRANCH
+unset _PATH_PROJECT
+unset _DATEFILE
+unset _DIR_PROJECT_BACKUP
+unset _DATE
+unset _PATH_PROJECT_TEMP
+unset _IS_DEFAULT_BRANCH
+unset _BACKUP_NAME
+unset _INPUT
+unset _SELECT_PATCH
+unset _CMD_REPO
+
+# finished
+print i "Clone Done!!!"

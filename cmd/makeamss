@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# switch out dir
+import "cmd/switch-out"
+
+export ARMTOOLS=RVCT221
+export ARMROOT=/opt/ARM
+export ARMPATH=$ARMROOT/RVCT/Programs/2.2/349/linux-pentium
+export ARMLIB=$ARMROOT/RVCT/Data/2.2/349/lib
+export ARMINCLUDE=$ARMROOT/RVCT/Data/2.2/349/include/unix
+export ARMINC=$ARMROOT/RVCT/Data/2.2/349/include/unix
+export ARMBIN=$ARMROOT/RVCT/Programs/2.2/349/linux-pentium
+export ARMHOME=$ARMROOT
+source /opt/ARM/RVDS22env.sh
+
+PROJECT_PATH="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+PROJECT_AMSS="$CFG_MAKE_AMSS"
+
+cd "$PROJECT_PATH/amss/modem_proc/build/ms/"
+"$PROJECT_AMSS"
+
+# clean up
+unset PROJECT_PATH
+unset PROJECT_AMSS

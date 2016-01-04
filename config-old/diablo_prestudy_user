@@ -1,0 +1,16 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2 config File      #
+##################################
+
+# load parent
+loadCfg ".default_jb22_cdr"
+
+# customize
+CFG_DIR_PROJECT="diablo_prestudy"
+CFG_NAME_PROJECT="diablo_lte"
+CFG_DIR_OUT="out/target/product/diablo_lte"
+CFG_ENV_CONFIG="choosecombo 1 diablo_lte user 2 2"
+
+CFG_BRANCH="diablo_prestudy"

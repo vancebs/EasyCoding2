@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# start cts
+CTS_SCRIPT="$CFG_DIR_BASE/$CFG_DIR_PROJECT/out/host/linux-x86/cts/android-cts/tools/cts-tradefed"
+if [ -e $CTS_SCRIPT ]; then
+    print i "==== cts tool 4.0 ===="
+    $CTS_SCRIPT
+else
+    CTS_SCRIPT="$CFG_DIR_BASE/$CFG_DIR_PROJECT/out/host/linux-x86/cts/android-cts/tools/startcts"
+    if [ -e $CTS_SCRIPT ]; then
+        print i "==== cts tool 2.3 ===="
+        $CTS_SCRIPT
+    else
+        print e "==== cts test tool not found! ===="
+    fi
+fi
+
+# clean up
+unset CTS_SCRIPT

@@ -1,0 +1,4 @@
+#! /bin/bash
+
+adb shell setprop persist.tctphone.root 1
+adb shell getprop persist.tctphone.root

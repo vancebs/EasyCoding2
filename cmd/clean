@@ -1,0 +1,70 @@
+#!/bin/bash
+
+###############################
+# functions begin             #
+function clean() {
+    # $1: Dir to remove
+    if [ -e $1 ]; then
+        rm -rf $1
+        print i "Removed:  $1"
+    fi
+}
+# functions end               #
+###############################
+
+# switch out dir
+import "cmd/switch-out"
+
+PROJECT_OUT="$CFG_DIR_BASE/$CFG_DIR_PROJECT/$CFG_DIR_OUT"
+if [ -z "$1" ]; then
+    print e "Invaild parameter"
+    print w "Please input which app you would like to clean"
+    exit 0
+elif [ "$1" == "-l" ]; then
+    ls "$PROJECT_OUT""/system/app/"
+    exit 0
+fi
+
+PROJECT_PATH="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+
+MODULE="$1"
+
+# app temp out folder
+APP="$PROJECT_PATH""/out/target/common/obj/APPS/""$MODULE""_intermediates"
+# custpack out folder for old platform
+CUST="$PROJECT_PATH""/out/target/common/jrdResCust/packages/apps/""$MODULE"
+# custpack out folder for cdr platform
+CUST2="$PROJECT_PATH""/out/target/perso/"$CFG_NAME_PROJECT"/jrdResAssetsCust/packages/apps/""$MODULE"
+# custpack out folder for vendor/tct/source/apps/*
+CUST3="$PROJECT_PATH""/out/target/perso/"$CFG_NAME_PROJECT"/jrdResAssetsCust/vendor/tct/source/apps/""$MODULE"
+# custpack out folder for frameworks/base/packages
+CUST4="$PROJECT_PATH""/out/target/perso/"$CFG_NAME_PROJECT"/jrdResAssetsCust/frameworks/base/packages/""$MODULE"
+# custpack out folder for frameworks/base/services
+CUST5="$PROJECT_PATH""/out/target/perso/"$CFG_NAME_PROJECT"/jrdResAssetsCust/frameworks/base/services/""$MODULE"
+CUST6="$PROJECT_PATH""/out/target/perso/"$CFG_NAME_PROJECT"/jrdResAssetsCust/packages/providers/""$MODULE"
+OUT_APP="$PROJECT_OUT/system/app/$MODULE"
+OUT_PRIV_APP="$PROJECT_OUT/system/priv-app/$MODULE"
+
+
+clean "$APP"
+clean "$CUST"
+clean "$CUST2"
+clean "$CUST3"
+clean "$CUST4"
+clean "$CUST5"
+clean "$CUST6"
+clean "$OUT_APP"
+clean "$OUT_PRIV_APP"
+
+# clean up
+unset PROJECT_PATH
+unset MODULE
+unset APP
+unset CUST
+unset CUST2
+unset CUST3
+unset CUST4
+unset CUST5
+unset CUST6
+unset OUT_APP
+unset OUT_PRIV_APP

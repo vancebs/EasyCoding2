@@ -1,0 +1,51 @@
+#! /bin/bash
+
+##########################################
+# Easy Coding 2 default config File      #
+##########################################
+
+# import global settings
+import "globalCfg"
+
+CFG_BRANCH="m812_cmcc"
+CFG_DIR_BASE="$GLOBAL_DIR_BASE"
+CFG_DIR_PROJECT="m812"
+#CFG_NAME_PROJECT="8926"
+#CFG_DIR_OUT="out/target/product/viper"
+CFG_ENV_SETUP="./build/envsetup.sh"
+#CFG_ENV_CONFIG="choosecombo 1 2 3 2 2"
+CFG_MAKE_ANDROID="make"
+CFG_MAKE_AMSS="./UDMCKOLYM.cmd"
+CFG_PARTITION=( "modem"    \
+                "sbl1"     \
+                "sbl2"     \
+                "sbl3"     \
+                "tz"       \
+                "rpm"      \
+                "boot"     \
+                "cache"    \
+                "system"   \
+                "persist"  \
+                "userdata" \
+                "recovery" \
+                "custpack" )
+CFG_IMAGE=( "NON-HLOS.bin"      \
+            "sbl1.mbn"          \
+            "sbl2.mbn"          \
+            "sbl3.mbn"          \
+            "tz.mbn"            \
+            "rpm.mbn"           \
+            "boot.img"          \
+            "cache.img"         \
+            "system.img"        \
+            "persist.img"       \
+            "userdata.img"      \
+            "recovery.img"      \
+            "custpack.img" )
+CFG_URL_REPO_PULL="$GLOBAL_URL_REPO_PULL""quickk"
+CFG_URL_REPO_PUSH="$GLOBAL_URL_REPO_PUSH""quickk"
+CFG_DIR_MANIFEST="manifest"
+
+# Dir keep the patchs on server "smb://172.16.11.20/software".
+# If this value not set, patch will be ignored
+#CFG_DIR_PATCH="04_Integration/Integration-2/Viper_EMEA"

@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# reboot to fastboot
+adb reboot bootloader
+
+# switch out dir
+import "cmd/switch-out"
+
+# variables
+KEY_FLASH_ALL="all"
+PROJECT_OUT="$CFG_DIR_BASE/$CFG_DIR_PROJECT/$CFG_DIR_OUT"
+
+# functions
+function getParationIndex()
+{
+    for ((i=0; i<${#CFG_PARTITION[@]}; i++)); do
+        if [ "${CFG_PARTITION[$i]}" == "$1" ]; then
+            return $i
+        fi
+    done
+    
+    return "255"
+}
+
+# get out path
+if [ "$1" == "-p" ]; then
+    OUT_PATH="$2"
+    shift
+    shift
+else
+    OUT_PATH="$PROJECT_OUT"
+fi
+
+# get partitions
+PARTITIONS=( $@ )
+if [ "${#PARTITIONS[@]}" -eq "0" ]; then
+    PARTITIONS=( ${CFG_PARTITION[@]} )
+elif [ "${#PARTITIONS[@]}" -eq "1" ] && [ "${PARTITIONS[0]}" == "$KEY_FLASH_ALL" ]; then
+    PARTITIONS=( ${CFG_PARTITION[@]} )
+fi
+
+# check partitions
+for p in "${PARTITIONS[@]}"; do
+    getParationIndex "$p"
+    index="$?"
+    if [ "$index" == "255" ]; then
+        # It's not a partition. stop
+        print e "Unkown partition name: $p"
+        print w "ec2 flash <-p path> [partition1] [partition2] ..."
+        exit
+    fi
+done
+
+# do flash
+for p in "${PARTITIONS[@]}"; do
+    getParationIndex "$p"
+    index="$?"
+    if [ -e $OUT_PATH/${CFG_IMAGE[$index]} ]; then
+        sudo fastboot flash ${CFG_PARTITION[$index]} $OUT_PATH/${CFG_IMAGE[$index]}
+    else
+        print w "Warning: partition \"${CFG_PARTITION[$index]}\" not found. Ingore it!"
+    fi
+done
+
+# reboot
+sudo fastboot reboot
+
+# clean up
+unset KEY_FLASH_ALL
+unset PROJECT_OUT
+unset i
+unset OUT_PATH
+unset PARTITIONS
+unset index
+unset p

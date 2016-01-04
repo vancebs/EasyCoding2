@@ -1,0 +1,26 @@
+#! /bin/bash
+
+###############################
+# functions begin             #
+function remount() {
+    # $1: partition name (i.e. /system)
+    adb shell mount | while read LINE; do
+        MATCH=`expr "$LINE" : ".*$1"`
+        if [ "$MATCH" -ne "0" ]; then
+            LINE="${LINE%?$1*}"
+            print i "Remounting $1 ..."
+            adb shell mount -o rw,remount -t yaffs2 $LINE
+            print i "Done"
+            break
+        fi
+    done
+    
+    # clean up
+    unset MATCH
+    unset LINE
+}
+# functions end               #
+###############################
+remount "/system"
+remount "/custpack"
+remount "/tctpersist"

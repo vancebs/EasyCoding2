@@ -1,0 +1,56 @@
+#!/bin/bash
+
+PROJECT_BRANCH="$CFG_BRANCH"
+PROJECT_PATH="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+
+## check for patch
+#if [ "$PROJECT_BRANCH" == "jb_cdr" ]; then
+#    if [ -e "$CFG_PATCH_SRC" ]; then
+#        # status OK message in green
+#        print i "Check patch OK!!"
+#    else
+#        # error message in red
+#        print e "Patch not found!!!"
+#        
+#        # info message in yellow
+#        print w "Please put your patch to path:"
+#        print w "        $CFG_PATCH_SRC"
+#        exit 0
+#    fi
+#fi
+
+# generate true path
+if [ "$#" -lt "2" ]; then
+TRUE_PATH="$CFG_DIR_BASE/projects/$CFG_DIR_PROJECT/$(date +%Y-%m-%d-%H-%M-%S)"
+else
+TRUE_PATH="$1"
+fi
+
+# create directory
+mkdir -p "$TRUE_PATH"
+
+# copy .classpath and .project
+cp -f "$PROJECT_PATH/.classpath" "$TRUE_PATH/.classpath"
+cp -f "$PROJECT_PATH/.project" "$TRUE_PATH/.project"
+
+# update link
+rm -f "$PROJECT_PATH"
+ln -s "$TRUE_PATH" "$PROJECT_PATH"
+
+# do clone
+cd "$PROJECT_PATH"
+if [ "$CFG_IS_DEFAULT_BRANCH" == "TRUE" ]; then
+    repo init -u "$CFG_URL_REPO_PULL/""$CFG_DIR_MANIFEST"".git"
+else
+    repo init -u "$CFG_URL_REPO_PULL/""$CFG_DIR_MANIFEST"".git" -m "$PROJECT_BRANCH.xml"
+fi
+repo sync
+repo start "$PROJECT_BRANCH" --all
+
+# clean up
+unset PROJECT_BRANCH
+unset PROJECT_PATH
+unset TRUE_PATH
+
+# success
+print i "Clone finished!!!"

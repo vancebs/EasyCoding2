@@ -1,0 +1,87 @@
+#! /bin/bash
+
+###############################
+# Easy Coding 2 Utility File  #
+###############################
+if [ $_UTILITY_ ]; then
+    print w "utility already imported"
+else
+    _UTILITY_=1
+
+##########################################
+# TODO: Code begin
+
+# Print text on terminal
+function print() {
+    # $1: type
+    # $2: text
+    TYPE=$1
+    shift
+    
+    case $TYPE in
+    [iI]|[iI][nN][fF][oO])             echo -e "\e[32m$@\e[0m";; # info
+    [wW]|[wW][aA][rR][nN][iI][nN][gG]) echo -e "\e[33m$@\e[0m";; # warning
+    [eE]|[eE][rR][rR][oO][rR])         echo -e "\e[31m$@\e[0m";; # error
+    esac
+    
+    unset TYPE
+}
+
+# load config
+function loadCfg() {
+    # $1: project name
+    import "config/$1"
+}
+
+# execute a cmd
+function execute() {
+    # $1: cmd
+    # $2: parameters (optinal)
+    # $3: parameters (optinal)
+    # $n: parameters (optinal)
+    source $SCRIPT_DIR/cmd/$@ ""
+}
+
+# load cmd list
+function loadCmdList() {
+    # $1: Script base dir
+    # $2: Parameter to receive the result
+    unset $2
+    i="0"
+    for file in $1/cmd/*; do
+        eval $2[$i]="${file#$1/cmd/}"
+        i=$((i + 1))
+    done
+
+    # clean up
+    unset file
+    unset i
+}
+
+# load config list
+function loadCfgList() {
+    # $1: Script base dir
+    # $2: Parameter to receive the result
+    unset $2
+    i="0"
+    for file in $1/config/*; do
+        eval $2[$i]="${file#$1/config/}"
+        i=$((i + 1))
+    done
+
+    # clean up
+    unset file
+    unset i
+}
+
+# help
+function help() {
+    print w "ec2 [PROJECT] [CMD1] <PARAMETER1> <PARAMETER2>, <CMD2> <PARAMETER1> <PARAMETER2>..."
+    print w "Example:"
+    print w "    ec2 scribe5 clone, make -j4, shutdown"
+}
+
+# TODO: Code end
+##########################################
+
+fi

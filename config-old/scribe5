@@ -1,0 +1,14 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2 config File      #
+##################################
+
+# load parent
+loadCfg ".default_jb_8x25"
+
+# customize
+CFG_DIR_PROJECT="scribe5"
+CFG_NAME_PROJECT="scribe5"
+CFG_DIR_OUT="out/target/product/scribe5"
+CFG_ENV_CONFIG="choosecombo 1 scribe5 3 2 2"

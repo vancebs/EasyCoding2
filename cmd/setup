@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# switch out dir
+import "cmd/switch-out"
+
+PROJECT_PATH="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+
+# remove old links
+rm -r "/opt/bin/adb"
+rm -r "/opt/bin/fastboot"
+rm -r "/opt/bin/hierarchyviewer"
+
+# create new link
+ln -s "$PROJECT_PATH/out/host/linux-x86/bin/adb" "/opt/bin/adb"
+ln -s "$PROJECT_PATH/out/host/linux-x86/bin/fastboot" "/opt/bin/fastboot"
+ln -s "$PROJECT_PATH/out/host/linux-x86/bin/hierarchyviewer" "/opt/bin/hierarchyviewer"
+
+# restart adb
+adb kill-server
+sudo adb devices
+
+# cleanup
+unset PROJECT_PATH

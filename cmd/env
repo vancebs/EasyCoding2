@@ -1,0 +1,21 @@
+#!/bin/bash
+
+print i "Current product: $ENV_CURRENT_PRODUCT"
+print i "Target product: $CFG_NAME_PROJECT"
+if [ "$ENV_CURRENT_PRODUCT" != "$CFG_NAME_PROJECT" ]; then
+    # wrong product
+    # do build env setup
+    ENV_CURRENT_PRODUCT=$CFG_NAME_PROJECT
+
+    print i "Start setup env"
+    pushd . > "/dev/null" # save current path
+    cd "$CFG_DIR_BASE/$CFG_DIR_PROJECT" # switch to project home
+    source "$CFG_ENV_SETUP" # source env
+    $CFG_ENV_CONFIG # choosecombo
+    popd > "/dev/null" # recover current path
+else
+    #echo -e "\e[33mno need to setup!\e[0m" # info message in yellow
+    print i "No need to setup env!!"
+fi
+
+unset ENV_FLAG

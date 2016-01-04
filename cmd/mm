@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# switch out dir
+import "cmd/switch-out"
+
+# setup env
+import "cmd/env"
+
+# do mm
+mmm ./ $@

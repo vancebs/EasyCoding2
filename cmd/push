@@ -1,0 +1,64 @@
+#! /bin/bash
+
+PROJECT_PATH="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+PROJECT_BRANCH="$CFG_BRANCH"
+PROJECT_PUSHURL="$CFG_URL_REPO_PUSH"
+
+# check whether whether current path is OK
+MATCH=`expr "$PWD" : ".*$PROJECT_PATH"`
+if [ "$MATCH" -eq "0" ]; then
+    # this mean the current path is invalid. we should exit
+    print e "Current path is not valid!"
+    print e "    Current path: $PWD"
+    print e "    Project path: $PROJECT_PATH"
+    exit
+fi
+
+# clean up
+unset MATCH
+
+LOCALPATH="${PWD#$PROJECT_PATH/}"
+HEAD="HEAD:refs/for/""$PROJECT_BRANCH"
+MANIFEST="$PROJECT_PATH/.repo/manifest.xml"
+
+# generate push path
+while read LINE; do
+    # get git local path
+    GIT_LOCAL_PATH="${LINE#*path=\"}"
+    GIT_LOCAL_PATH="${GIT_LOCAL_PATH%\"*/>*}"
+    
+    # compare git local path to current path
+    MATCH=`expr "$LOCALPATH" : "$GIT_LOCAL_PATH"`
+    if [ "$MATCH" -ne "0" ]; then
+        _CHECK="${LOCALPATH:$MATCH:1}"
+        if [[ "$_CHECK" == "/" || "$_CHECK" == "" ]]; then
+            # get it
+            LINE="${LINE#*name=\"}"
+            LINE="${LINE%\"*path=*}"
+            PUSHURL="$PROJECT_PUSHURL""/""$LINE"".git"
+            break
+        else
+            # not the right path. i.e. Gallery will be matched as Gallery2
+            continue
+        fi
+    fi
+done < $MANIFEST
+
+if [ -z "$PUSHURL" ]; then
+    print e "Wrong path! Please check"
+else
+    git push $PUSHURL $HEAD
+fi
+
+# clean up
+unset GIT_LOCAL_PATH
+unset PROJECT_PATH
+unset PROJECT_BRANCH
+unset PROJECT_PUSHURL
+unset LOCALPATH
+unset HEAD
+unset MANIFEST
+unset MATCH
+unset LINE
+unset PUSHURL
+unset _CHECK

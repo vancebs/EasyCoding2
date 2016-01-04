@@ -1,0 +1,151 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2                  #
+##################################
+
+# get script path
+export SCRIPT_PATH=$(readlink -f "${BASH_SOURCE[0]}")
+export SCRIPT_DIR=$(dirname $SCRIPT_PATH)
+
+# clean up
+unset TEXT_LS
+
+# function to import other scripts
+function import() {
+    # $1: path & parameters
+    source "$SCRIPT_DIR/$1"
+}
+
+# imports
+import "utility"
+
+##########################################
+# TODO: Initialize
+
+#=============================
+# get project name
+if [ $1 ]; then
+    PROJECT_NAME="$1"
+    shift
+    
+    #=============================
+    # load cmd list
+    loadCmdList "$SCRIPT_DIR" "CMD_LIST"
+
+    #=============================
+    # load cfg list
+    loadCfgList "$SCRIPT_DIR" "CFG_LIST"
+
+    #=============================
+    # check project name with cfg list
+    result="0"
+    for name in ${CFG_LIST[@]}; do
+        if [ $name == $PROJECT_NAME ]; then
+            result="1"
+            break
+        fi
+    done
+    
+    # check result
+    if [ "$result" == "0" ]; then
+        print e "Error! Project name is invalide"
+        print w "Available project names are:"
+        for name in ${CFG_LIST[@]}; do
+            print w "    $name"
+        done
+    else
+        # clean up
+        unset result
+        unset name
+        
+        #=============================
+        # prepare config
+        #import "config/$PROJECT_NAME"
+        loadCfg "$PROJECT_NAME"
+        
+        #=============================
+        # check user cmds
+        if [ "$#" -eq "0" ]; then
+            print e "Error! No command found"
+            help
+        else
+            unset PARAMS
+            unset CMDS
+            params="$@"
+            until [ -z "$params" ]; do
+                # get section by ","
+                len=`expr index "$params" ","`
+                if [ "$len" -eq "0" ]; then
+                    section="$params"            # "," not found, may be get the last part
+                else
+                    section="${params:0:$len}"
+                fi
+                params="${params#$section}"      # remove obtained section from params
+                section="${section%,}"           # remove ",'
+                eval section="\$(echo $section)" # remove blank on left/right
+
+                # get cmd
+                cmd="${section%% *}"
+                eval cmd="\$(echo $cmd)"         # remove blank on left/right
+                
+                # get parameter
+                param="${section#*$cmd}"
+                eval param="\$(echo $param)"     # remove blank on left/right
+                
+                # check cmd with cmd list
+                result="0"
+                for c in ${CMD_LIST[@]}; do
+                    if [ $c == $cmd ]; then
+                        result="1"
+                        break
+                    fi
+                done
+
+                # check result
+                if [ "$result" == "0" ]; then
+                    print e "Error! Invalide CMD: $cmd"
+                    print w "Available CMDs are:"
+                    for c in ${CMD_LIST[@]}; do
+                        print w "    $c"
+                    done
+                    break
+                fi
+                
+                # add the section to section list
+                CMDS[${#CMDS[@]}]=$cmd
+                PARAMS[${#PARAMS[@]}]=$param
+                #SECTIONS[${#SECTIONS[@]}]=$section
+            done
+
+            # clean up
+            unset params
+            unset len
+            unset section
+            unset cmd
+            unset result
+            unset c
+
+            #=============================
+            # execute cmds
+            n=${#CMDS[@]}
+            i="0"
+            until [ "$i" -eq "$n" ]; do
+                #pushd . > "/dev/null" # save current path
+                execute "${CMDS[$i]}" "${PARAMS[$i]}"
+                i=$((i+1))
+                #popd > "/dev/null" # recover current path
+            done
+
+            # clean up
+            unset n
+            unset i
+            unset CMDS
+            unset PARAMS
+        fi
+    fi
+else
+    print e "Error! Project name missed"
+    help
+fi
+

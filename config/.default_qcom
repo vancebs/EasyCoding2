@@ -1,0 +1,30 @@
+#! /bin/bash
+
+##########################################
+# Easy Coding 2 default config File      #
+##########################################
+
+# import global settings
+import "globalCfg"
+
+#CFG_BRANCH="aeneas_acg"
+CFG_DIR_BASE="$GLOBAL_DIR_BASE"
+#CFG_DIR_PROJECT="aeneas_acg"
+#CFG_DIR_OUT="out/target/product/JukeB"
+CFG_ENV_SETUP="./build/envsetup.sh"
+#CFG_ENV_CONFIG="choosecombo 1 1 7 1 1"
+CFG_MAKE_ANDROID="make"
+CFG_MAKE_AMSS="./UDMCKOLYM.cmd"
+CFG_PARTITION=( "system"   \
+                "recovery" \
+                "userdata" \
+                "boot"     \
+                "custpack" )
+CFG_IMAGE=( "system.img"   \
+            "recovery.img" \
+            "userdata.img" \
+            "boot.img"     \
+            "custpack.img" )
+CFG_URL_REPO_PULL="$GLOBAL_URL_REPO_PULL""platform_qcom"
+CFG_URL_REPO_PUSH="$GLOBAL_URL_REPO_PUSH""platform_qcom"
+CFG_DIR_MANIFEST="manifests"

@@ -1,0 +1,29 @@
+#! /bin/bash
+
+# switch out dir
+import "cmd/switch-out"
+
+PROJECT_OUT="$CFG_DIR_BASE/$CFG_DIR_PROJECT/$CFG_DIR_OUT"
+PROJECT_BRANCH="$CFG_BRANCH"
+
+if [ -z "$1" ]; then
+    print e "Invaild parameter"
+    print w "Please input which app you would like to install"
+    exit 0
+fi
+
+AppName="$1"
+ApkSrc="$PROJECT_OUT/system/app/$AppName/$AppName.apk"
+PrivAppSrc="$PROJECT_OUT/system/priv-app/$AppName/$AppName.apk"
+
+print i "Begin install"
+adb install -r $ApkSrc
+adb install -r $PrivAppSrc
+print i "End install"
+
+# clean up
+unset PROJECT_OUT
+unset PROJECT_BRANCH
+unset AppName
+unset ApkSrc
+unset PrivAppSrc

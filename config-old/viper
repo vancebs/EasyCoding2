@@ -1,0 +1,16 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2 config File      #
+##################################
+
+# load parent
+loadCfg ".default_jb22_cdr"
+
+# customize
+CFG_DIR_PROJECT="viper"
+CFG_NAME_PROJECT="viper"
+CFG_DIR_OUT="out/target/product/viper"
+CFG_ENV_CONFIG="choosecombo 1 viper 3 2 2"
+
+CFG_BRANCH="viper"

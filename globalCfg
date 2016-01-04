@@ -1,0 +1,32 @@
+#! /bin/bash
+
+##########################################
+# Easy Coding 2 global config File       #
+##########################################
+
+# The dir where you keep all your projects
+GLOBAL_DIR_BASE="/media/Ubuntu/platforms"
+
+# URL where you download your project
+# Example:
+#     URL: "ssh://fan.hu@172.16.11.162:29418/quic/manifests.git"
+#     SET: "ssh://fan.hu@172.16.11.162:29418/"
+#
+#     URL: "git@172.16.11.162:quic/manifests.git"
+#     SET: "git@172.16.11.162:"
+GLOBAL_URL_REPO_PULL="git@172.16.11.162:"
+
+# URL where you push your code. 
+# Example:
+#     URL: "ssh://fan.hu@172.16.11.162:29418/quic/manifests.git"
+#     SET: "ssh://fan.hu@172.16.11.162:29418/"
+#
+#     URL: "git@172.16.11.162:quic/manifests.git"
+#     SET: "git@172.16.11.162:"
+GLOBAL_URL_REPO_PUSH="ssh://fan.hu@172.16.11.162:29418/"
+
+# Name which is required to input by repo
+GLOBAL_REPO_NAME="fan.hu"
+
+# Email which is required to input by repo
+GLOBAL_REPO_EMAIL="fan.hu@tcl.com"

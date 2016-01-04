@@ -1,0 +1,72 @@
+#!/bin/bash
+
+function log() {
+    # $1: Text
+    # $2: Type
+    #     BEGIN: initialize the log file with begin tag
+    #     END: add content to log with end tag
+    #     NORMAL or not set: add content to log file
+    _LOG_FILE="make_result"
+    _DATE="["$(date "+%F %T")"]"
+    if [ "$2" == "BEGIN" ]; then
+        echo "$_DATE ==== Begin make ====" > $_LOG_FILE
+    elif [ "$2" == "END" ]; then
+        echo "$_DATE ==== End   make ====" >> $_LOG_FILE
+    else
+        print i "$1" # show to end user
+        echo "$_DATE $1" >> $_LOG_FILE
+    fi
+    
+    unset _LOG_FILE
+    unset _DATE
+}
+
+# status OK message in green
+print i "make begin"
+
+FORCE_MAKE="FALSE"
+MAKE_RESULT=""
+TARGET_REAL_OUT_DIR="$CFG_DIR_BASE/$CFG_DIR_PROJECT/outs/$CFG_NAME_PROJECT"
+
+# check for -f
+if [ "$1" == "-f" ]; then
+    FORCE_MAKE="TRUE"
+    shift
+fi
+
+# switch out dir
+import "cmd/switch-out"
+
+# setup env
+import "cmd/env"
+
+# do make
+cd "$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+log "" "BEGIN"
+$CFG_MAKE_ANDROID $@ # do make
+MAKE_RESULT="$?"
+log "result: $MAKE_RESULT"
+
+if [ "$FORCE_MAKE" == "TRUE" ]; then
+    # retry if failed
+    while [ "$MAKE_RESULT" -ne "0" ]; do
+        cd "device/tct"
+        git checkout -f # a patch for device/tct modified duration complie
+        cd "../../"
+        rm -rf ./out
+        rm -rf $TARGET_REAL_OUT_DIR
+        repo sync
+        $CFG_MAKE_ANDROID $@ # do make
+        MAKE_RESULT="$?"
+        log "result: $MAKE_RESULT"
+    done
+fi
+
+log "" "END"
+
+# status OK message in green
+print i "make finished"
+
+unset FORCE_MAKE
+unset MAKE_RESULT
+unset TARGET_REAL_OUT_DIR
