@@ -46,7 +46,7 @@ for p in "${PARTITIONS[@]}"; do
     if [ "$index" == "255" ]; then
         # It's not a partition. stop
         print e "Unkown partition name: $p"
-        print w "ec2 flash <-p path> [partition1] [partition2] ..."
+        print w "ec2 [project] flash <-p path> [partition1] [partition2] ..."
         exit
     fi
 done

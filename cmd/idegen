@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# switch out dir
+import "cmd/switch-out"
+
+# setup env
+import "cmd/env"
+
+PROJECT_DIR="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+IDEGEN_TOOL_PATH="$PROJECT_DIR/out/host/linux-x86/framework/idegen.jar"
+
+# make idegen tool if necessary
+if [ -f "$IDEGEN_TOOL_PATH" ]; then
+    print w "Tool already made. Skip making"
+else
+    make idegen
+fi
+
+# generate project file for android studio
+print i "Generating ..."
+$PROJECT_DIR/development/tools/idegen/idegen.sh
+print i "Done"
+
+unset PROJECT_DIR

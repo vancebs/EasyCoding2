@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # switch out dir
 import "cmd/switch-out"
