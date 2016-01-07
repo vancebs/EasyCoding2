@@ -67,9 +67,16 @@ PrivAppSrc="$PROJECT_OUT/system/priv-app/$AppName/$AppName.apk"
 PrivAppDest="/system/priv-app/$AppName"
 PrivOdexSrc="$PROJECT_OUT/system/priv-app/$AppName/oat/arm64/$AppName.odex"
 PrivOdexDest="/system/priv-app/$AppName/oat/arm64"
-FrameworkSrc="$PROJECT_OUT/system/framework/$AppName.jar"
-FrameworkDest="/system/framework"
-
+FrameworkJarSrc="$PROJECT_OUT/system/framework/$AppName.jar"
+FrameworkJarDest="/system/framework"
+FrameworkApkSrc="$PROJECT_OUT/system/framework/$AppName.apk"
+FrameworkApkDest="/system/framework"
+FrameworkOdexSrc="$PROJECT_OUT/system/framework/oat/arm64/$AppName.odex"
+FrameworkOdexDest="/system/framework/oat/arm64/"
+VendorApkSrc="$PROJECT_OUT/system/vendor/app/$AppName/$AppName.apk"
+VendorApkDest="/system/vendor/app/$AppName"
+VendorOdexSrc="$PROJECT_OUT/system/vendor/app/$AppName/oat/arm64/$AppName.odex"
+VendorOdexDest="/system/vendor/app/$AppName/oat/arm64"
 
 
 # do remount for cdr
@@ -82,7 +89,11 @@ adb_push "[/system/app] APK" $ApkSrc $ApkDest
 adb_push "[/system/app] ODEX" $OdexSrc $OdexDest
 adb_push "[/system/priv-app] APK" $PrivAppSrc $PrivAppDest
 adb_push "[/system/priv-app] ODEX" $PrivOdexSrc $PrivOdexDest
-adb_push "[/framework] Jar" $FrameworkSrc $FrameworkDest
+adb_push "[/system/framework] JAR" $FrameworkJarSrc $FrameworkJarDest
+adb_push "[/system/framework] APK" $FrameworkApkSrc $FrameworkApkDest
+adb_push "[/system/framework] ODEX" $FrameworkOdexSrc $FrameworkOdexDest
+adb_push "[/system/vendor/app] APK" $VendorApkSrc $VendorApkDest
+adb_push "[/system/vendor/app] ODEX" $VendorOdexSrc $VendorOdexDest
 print i "End push"
 
 # clean up
@@ -97,5 +108,9 @@ unset PrivAppSrc
 unset PrivAppDest
 unset PrivOdexSrc
 unset PrivOdexDest
-unset FrameworkSrc
-unset FrameworkDest
+unset FrameworkJarSrc
+unset FrameworkJarDest
+unset FrameworkApkSrc
+unset FrameworkApkDest
+unset FrameworkOdexSrc
+unset FrameworkOdexDest
