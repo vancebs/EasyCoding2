@@ -77,6 +77,8 @@ VendorApkSrc="$PROJECT_OUT/system/vendor/app/$AppName/$AppName.apk"
 VendorApkDest="/system/vendor/app/$AppName"
 VendorOdexSrc="$PROJECT_OUT/system/vendor/app/$AppName/oat/arm64/$AppName.odex"
 VendorOdexDest="/system/vendor/app/$AppName/oat/arm64"
+SystemBinSrc="$PROJECT_OUT/system/bin/$AppName"
+SystemBinDest="/system/bin/$AppName"
 
 
 # do remount for cdr
@@ -94,6 +96,7 @@ adb_push "[/system/framework] APK" $FrameworkApkSrc $FrameworkApkDest
 adb_push "[/system/framework] ODEX" $FrameworkOdexSrc $FrameworkOdexDest
 adb_push "[/system/vendor/app] APK" $VendorApkSrc $VendorApkDest
 adb_push "[/system/vendor/app] ODEX" $VendorOdexSrc $VendorOdexDest
+adb_push "[/system/bin] BIN" $SystemBinSrc $SystemBinDest
 print i "End push"
 
 # clean up

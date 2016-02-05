@@ -1,0 +1,34 @@
+#! /bin/bash
+
+pushd . > "/dev/null" # save current path
+
+# switch out dir
+import "cmd/switch-out"
+
+# setup env
+import "cmd/env"
+
+PROJECT_DIR="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+EXTERNAL_DIR="$PROJECT_DIR/external"
+IOZONE_DIR="$EXTERNAL_DIR/iozone4Android"
+IOZONE_SRC_URL="https://github.com/vancebs/iozone4Android.git"
+
+
+# download source code if not exists
+if [ -f "$IOZONE_DIR" ]; then
+    print w "Source code already exists."
+else
+    cd $EXTERNAL_DIR
+    git clone $IOZONE_SRC_URL
+fi
+
+# make
+cd $IOZONE_DIR
+mm
+
+unset PROJECT_DIR
+unset EXTERNAL_DIR
+unset IOZONE_DIR
+unset IOZONE_SRC_URL
+
+popd > "/dev/null" # recover current path
