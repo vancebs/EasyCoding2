@@ -1,0 +1,13 @@
+#! /bin/bash
+
+# switch out dir
+import "cmd/switch-out"
+
+# setup env
+import "cmd/env"
+
+PROJECT_OUT="$CFG_DIR_BASE/$CFG_DIR_PROJECT/$CFG_DIR_OUT"
+
+addr2line -C -f -e "$PROJECT_OUT/symbols/$2" "$1"
+
+unset PROJECT_OUT

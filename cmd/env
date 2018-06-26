@@ -13,6 +13,9 @@ if [ "$ENV_CURRENT_PRODUCT" != "$CFG_NAME_PROJECT" ]; then
     source "$CFG_ENV_SETUP" # source env
     $CFG_ENV_CONFIG # choosecombo
     popd > "/dev/null" # recover current path
+
+    # config jack
+    export JACK_SERVER_VM_ARGUMENTS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4096m"
 else
     #echo -e "\e[33mno need to setup!\e[0m" # info message in yellow
     print i "No need to setup env!!"

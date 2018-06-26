@@ -1,0 +1,5 @@
+#! /bin/bash
+
+adb reboot bootloader
+sudo fastboot erase frp
+sudo fastboot reboot

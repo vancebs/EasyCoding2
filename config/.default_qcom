@@ -28,3 +28,4 @@ CFG_IMAGE=( "system.img"   \
 CFG_URL_REPO_PULL="$GLOBAL_URL_REPO_PULL""platform_qcom"
 CFG_URL_REPO_PUSH="$GLOBAL_URL_REPO_PUSH""platform_qcom"
 CFG_DIR_MANIFEST="manifests"
+CFG_CLONE_BRANCH_TYPE="m"

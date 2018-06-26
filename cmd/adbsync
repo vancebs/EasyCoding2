@@ -1,0 +1,16 @@
+#! /bin/bash
+
+# get root for userdebug version
+adb root
+sleep 2
+adb shell setenforce 0
+adb remount
+adb disable-verity
+
+# switch out dir
+import "cmd/switch-out"
+
+PROJECT_OUT="$CFG_DIR_BASE/$CFG_DIR_PROJECT"
+cd $PROJECT_OUT
+adb sync
+

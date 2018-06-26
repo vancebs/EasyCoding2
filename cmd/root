@@ -1,0 +1,40 @@
+#!/bin/bash
+
+#adb disable-verity
+#adb shell setprop ro.secure 0
+#adb shell setprop ro.debuggable 1
+#adb shell setprop ro.allow.mock.location 1
+#adb shell setprop persist.sys.usb.config mtp,adb
+#sleep 2
+#adb shell /system/bin/setenforce 0
+
+arg=$1
+if [[ -z "${arg}" ]] ; then
+#adb shell am start -n com.jrdcom.user2root/.JrdUser2Root 
+adb shell setprop ro.secure 0
+adb shell setprop ro.debuggable 1
+adb shell setprop ro.allow.mock.location 1
+adb shell setprop persist.sys.usb.config mtp,adb
+sleep 2
+#adb "wait-for-device"
+adb root
+sleep 2
+#adb "wait-for-device"
+adb shell /system/bin/setenforce 0
+adb remount
+
+else
+#adb shell setprop persist.tctphone.root 1
+adb shell setprop ro.secure 1
+adb shell setprop ro.debuggable 0
+adb shell setprop ro.allow.mock.location 0
+adb shell /system/bin/setenforce 1
+result=`adb shell ps | grep adbd`
+pid=`echo $result | awk -F " " '{print $2}'`
+adb shell kill $pid
+
+fi
+
+
+
+print i "Rooted"

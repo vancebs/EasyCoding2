@@ -42,6 +42,8 @@ function adb_push() {
 # get root for userdebug version
 adb root
 sleep 2
+adb shell setenforce 0
+adb disable-verity
 
 # switch out dir
 import "cmd/switch-out"
@@ -72,13 +74,17 @@ FrameworkJarDest="/system/framework"
 FrameworkApkSrc="$PROJECT_OUT/system/framework/$AppName.apk"
 FrameworkApkDest="/system/framework"
 FrameworkOdexSrc="$PROJECT_OUT/system/framework/oat/arm64/$AppName.odex"
-FrameworkOdexDest="/system/framework/oat/arm64/"
+FrameworkOdexDest="/system/framework/oat/arm64"
 VendorApkSrc="$PROJECT_OUT/system/vendor/app/$AppName/$AppName.apk"
 VendorApkDest="/system/vendor/app/$AppName"
 VendorOdexSrc="$PROJECT_OUT/system/vendor/app/$AppName/oat/arm64/$AppName.odex"
 VendorOdexDest="/system/vendor/app/$AppName/oat/arm64"
 SystemBinSrc="$PROJECT_OUT/system/bin/$AppName"
 SystemBinDest="/system/bin/$AppName"
+BootArtSrc="$PROJECT_OUT/dex_bootjars/system/framework/arm/boot.art"
+BootArtDest="/system/framework/arm"
+BootArt64Src="$PROJECT_OUT/dex_bootjars/system/framework/arm64/boot.art"
+BootArt64Dest="/system/framework/arm64"
 
 
 # do remount for cdr
@@ -86,6 +92,7 @@ print i "Do remount before push"
 remount "/system"
 remount "/custpack"
 
+# do push
 print i "Begin push"
 adb_push "[/system/app] APK" $ApkSrc $ApkDest
 adb_push "[/system/app] ODEX" $OdexSrc $OdexDest
@@ -94,6 +101,10 @@ adb_push "[/system/priv-app] ODEX" $PrivOdexSrc $PrivOdexDest
 adb_push "[/system/framework] JAR" $FrameworkJarSrc $FrameworkJarDest
 adb_push "[/system/framework] APK" $FrameworkApkSrc $FrameworkApkDest
 adb_push "[/system/framework] ODEX" $FrameworkOdexSrc $FrameworkOdexDest
+if [ "$AppName" == "framework" ]; then
+adb_push "[/system/framework] ART" $BootArtSrc $BootArtDest
+adb_push "[/system/framework] ART64" $BootArt64Src $BootArt64Dest
+fi
 adb_push "[/system/vendor/app] APK" $VendorApkSrc $VendorApkDest
 adb_push "[/system/vendor/app] ODEX" $VendorOdexSrc $VendorOdexDest
 adb_push "[/system/bin] BIN" $SystemBinSrc $SystemBinDest

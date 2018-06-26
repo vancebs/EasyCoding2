@@ -1,0 +1,9 @@
+#! /bin/bash
+
+# get .bashrc
+cp /etc/skel/.bashrc ~/
+
+# config git
+git config --global color.ui true
+git config --global user.name Fan.Hu
+git config --global user.email fan.hu@t2mobile.com

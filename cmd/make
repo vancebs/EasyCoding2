@@ -9,7 +9,7 @@ function log() {
     _LOG_FILE="make_result"
     _DATE="["$(date "+%F %T")"]"
     if [ "$2" == "BEGIN" ]; then
-        echo "$_DATE ==== Begin make ====" > $_LOG_FILE
+        echo "$_DATE ==== Begin make ====" >> $_LOG_FILE
     elif [ "$2" == "END" ]; then
         echo "$_DATE ==== End   make ====" >> $_LOG_FILE
     else

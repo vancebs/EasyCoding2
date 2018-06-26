@@ -50,6 +50,7 @@ echo "$_DATE" > "$_PATH_PROJECT_TEMP/$_DATEFILE"
 # copy .classpath and .project
 cp -f "$_PATH_PROJECT/.classpath" "$_PATH_PROJECT_TEMP/.classpath"
 cp -f "$_PATH_PROJECT/.project" "$_PATH_PROJECT_TEMP/.project"
+cp -rf "$_PATH_PROJECT/.vscode" "$_PATH_PROJECT_TEMP/.vscode"
 
 # downalod patch
 if [ "$_SELECT_PATCH" == "TRUE" ]; then
@@ -62,17 +63,23 @@ fi
 _INPUT="$GLOBAL_REPO_NAME\r$GLOBAL_REPO_EMAIL\ry\r"
 
 # prepar repo cmd
-_CMD_REPO="repo init -u $CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git"
+_CMD_REPO="$CFG_REPO_BIN init -u $CFG_URL_REPO_PULL/$CFG_DIR_MANIFEST.git"
 if [ "$_IS_DEFAULT_BRANCH" != "TRUE" ]; then
-    _CMD_REPO="$_CMD_REPO -m $_BRANCH.xml"
+    if [ "$CFG_CLONE_BRANCH_TYPE" == "b" ]; then
+        _CMD_REPO="$_CMD_REPO -b $_BRANCH"
+    else
+        _CMD_REPO="$_CMD_REPO -m $_BRANCH.xml"
+    fi
 fi
-#_CMD_REPO="$_CMD_REPO --depth=1"
+_CMD_REPO="$_CMD_REPO $CFG_CLONE_EXTRA_PARAM --depth=1 --config-name"
+
+echo $_CMD_REPO
 
 # do clone
 cd "$_PATH_PROJECT_TEMP"
 echo -e "$_INPUT" | $_CMD_REPO
-repo sync -j8
-repo start "$_BRANCH" --all
+$CFG_REPO_BIN sync -j8
+$CFG_REPO_BIN start "$_BRANCH" --all
 
 # do clone
 #cd "$_PATH_PROJECT_TEMP"

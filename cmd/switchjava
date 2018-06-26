@@ -1,0 +1,8 @@
+#! /bin/bash
+
+print i "switching java"
+sudo update-alternatives --config java
+print i "switching javac"
+sudo update-alternatives --config javac
+print i "switching javap"
+sudo update-alternatives --config javap

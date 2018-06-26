@@ -13,6 +13,7 @@ IDEGEN_TOOL_PATH="$PROJECT_DIR/out/host/linux-x86/framework/idegen.jar"
 if [ -f "$IDEGEN_TOOL_PATH" ]; then
     print w "Tool already made. Skip making"
 else
+    cd $PROJECT_DIR
     make idegen
 fi
 

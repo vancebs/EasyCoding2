@@ -1,0 +1,11 @@
+#!/bin/bash
+
+adb shell setprop ro.secure 1
+adb shell setprop ro.debuggable 0
+adb shell setprop ro.allow.mock.location 0
+adb shell /system/bin/setenforce 1
+result=`adb shell ps | grep adbd`
+pid=`echo $result | awk -F " " '{print $2}'`
+adb shell kill $pid
+
+print i "Unrooted"

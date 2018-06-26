@@ -1,0 +1,4 @@
+#!/bin/bash
+
+print i "Switch to out dir of $CFG_NAME_PROJECT"
+cd "$CFG_DIR_BASE/$CFG_DIR_PROJECT/$CFG_DIR_OUT"

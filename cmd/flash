@@ -2,6 +2,7 @@
 
 # reboot to fastboot
 adb reboot bootloader
+sudo fastboot devices oem unlock
 
 # switch out dir
 import "cmd/switch-out"

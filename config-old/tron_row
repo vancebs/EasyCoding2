@@ -1,0 +1,19 @@
+#! /bin/bash
+
+##################################
+# Easy Coding 2 config File      #
+##################################
+
+# load parent
+loadCfg ".default_l8916"
+
+# customize
+CFG_DIR_PROJECT="tron_row"
+CFG_NAME_PROJECT="tron"
+CFG_DIR_OUT="out/target/product/$CFG_NAME_PROJECT"
+CFG_ENV_CONFIG="choosecombo 1 $CFG_NAME_PROJECT userdebug row 2"
+
+CFG_BRANCH="Vertu/Tron"
+#CFG_REPO_BIN="repo_vertu"
+CFG_CLONE_BRANCH_TYPE="b"
+CFG_DIR_MANIFEST="platform/manifest"
